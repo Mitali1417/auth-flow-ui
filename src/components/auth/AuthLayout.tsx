@@ -27,7 +27,7 @@ export function AuthLayout({
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Side - Minimal Branding */}
-      <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-gradient-to-br from-primary/5 to-background dark:from-primary/10 dark:to-background">
+      <Card className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-muted">
         <div className="space-y-8 max-w-md mx-auto">
           {/* Logo & App Name */}
           <div className="flex items-center space-x-3">
@@ -82,10 +82,10 @@ export function AuthLayout({
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Right Side - Auth Forms */}
-      <div className="lg:w-1/2 flex items-center justify-center p-4 lg:p-8 bg-background">
+      <div className="lg:w-1/2 flex items-center justify-center p-4 lg:p-8 ">
         <div className="w-full max-w-md">
           {showBackButton && (
             <Link
