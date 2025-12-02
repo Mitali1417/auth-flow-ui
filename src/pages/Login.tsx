@@ -89,7 +89,7 @@ export function Login() {
           />
           <Label
             htmlFor="remember"
-            className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             Remember me for 30 days
           </Label>

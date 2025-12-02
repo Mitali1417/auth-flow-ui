@@ -68,7 +68,7 @@ export function OTPInput({ length = 6, onComplete }: OTPInputProps) {
           onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => 
             handleKeyDown(index, e)
           }
-          className="w-12 h-12 text-center text-xl font-semibold"
+          className="w-12 h-12 text-center border-primary text-xl font-semibold"
           autoFocus={index === 0}
         />
       ))}

@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import { SocialButtons } from '@/components/auth/SocialButtons';
-import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { SocialButtons } from "@/components/auth/SocialButtons";
+import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react";
 
 export function Signup() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
@@ -31,7 +31,7 @@ export function Signup() {
     e.preventDefault();
     // Handle signup logic here
     console.log(formData);
-    navigate('/verify-otp');
+    navigate("/verify-otp");
   };
 
   return (
@@ -136,20 +136,21 @@ export function Signup() {
             checked={agreeToTerms}
             onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
           />
-          <div className="grid gap-1.5 leading-none">
-            <Label
-              htmlFor="terms"
-              className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          <div className="flex flex-wrap items-center gap-1 text-xs">
+            <span className="text-muted-foreground">I agree to the</span>
+            <Link
+              to="/terms"
+              className="text-primary hover:underline font-medium"
             >
-              I agree to the{" "}
-              <Link to="/terms" className="text-primary hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link to="/privacy" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </Label>
+              Terms of Service
+            </Link>
+            <span className="text-muted-foreground">and</span>
+            <Link
+              to="/privacy"
+              className="text-primary hover:underline font-medium"
+            >
+              Privacy Policy
+            </Link>
           </div>
         </div>
 
