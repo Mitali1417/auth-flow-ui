@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Montserrat+Alternates:ital,wght@0,100..900;1,100..900&family=DM+Serif+Display:ital@0;1&family=Dancing+Script:ital,wght@0,400..700;1,400..700&family=Quicksand:ital,wght@0,300..700;1,300..700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,slnt,wght@0,-10..0,100..900;1,-10..0,100..900&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -39,6 +41,15 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Custom font families */
+  --font-mons: "Montserrat Alternates", sans-serif;
+  --font-kalnia: "Kalnia", serif;
+  --font-dm: "DM Serif Display", serif;
+  --font-ds: "Dancing Script", cursive;
+  --font-quicks: "Quicksand", sans-serif;
+  --font-dms: "DM Sans", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
 
 :root {
@@ -114,7 +125,72 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-primary text-foreground font-inter;
+    font-family: "Inter", sans-serif;
+  }
+
+  /* General text styling */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  li,
+  span,
+  div {
+    @apply text-primary font-dms;
+  }
+
+  /* Headings */
+  h1 {
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl md:text-4xl font-semibold text-shadow-primary mb-3;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl md:text-3xl font-medium text-primary mb-2;
+  }
+
+  h4 {
+    @apply text-lg sm:text-xl md:text-2xl font-medium text-primary mb-2;
+  }
+
+  h5 {
+    @apply text-base sm:text-lg md:text-xl font-medium text-primary mb-1;
+  }
+
+  h6 {
+    @apply text-sm sm:text-base md:text-lg font-medium text-primary mb-1;
+  }
+
+  /* Paragraphs and divs */
+  p {
+    @apply text-xs sm:text-sm text-primary mb-4;
+  }
+
+  div {
+    @apply text-sm sm:text-base text-primary;
+  }
+
+  span {
+    @apply text-xs sm:text-sm md:text-base text-primary;
+  }
+
+  /* Lists */
+  li {
+    @apply text-sm sm:text-base text-primary mb-1;
+  }
+
+  /* Links */
+  a {
+    @apply text-sm sm:text-base text-primary;
   }
 }
