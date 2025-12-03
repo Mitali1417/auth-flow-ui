@@ -5,33 +5,67 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { SocialButtons } from "@/components/auth/SocialButtons";
-import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react";
+import { Mail, User, Smartphone, ArrowRight } from "lucide-react";
 
 export function Signup() {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [verificationMethod, setVerificationMethod] = useState<"email" | "sms">(
+    "email"
+  );
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log(formData);
-    navigate("/verify-otp");
+
+    const identifier = verificationMethod === "email" ? email : phone;
+
+    // Validation
+    if (verificationMethod === "email" && !validateEmail(identifier)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    if (verificationMethod === "sms" && !validatePhone(identifier)) {
+      alert("Please enter a valid phone number");
+      return;
+    }
+
+    if (!name.trim()) {
+      alert("Please enter your name");
+      return;
+    }
+
+    if (!agreeToTerms) {
+      alert("Please agree to the Terms of Service and Privacy Policy");
+      return;
+    }
+
+    // Store user data temporarily
+    sessionStorage.setItem("signup_identifier", identifier);
+    sessionStorage.setItem("signup_method", verificationMethod);
+    sessionStorage.setItem("signup_name", name);
+
+    // Navigate to OTP verification
+    navigate("/verify-otp", {
+      state: {
+        identifier,
+        method: verificationMethod,
+        purpose: "signup",
+        name,
+      },
+    });
+  };
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    return phone.length >= 10;
   };
 
   return (
@@ -51,84 +85,72 @@ export function Signup() {
               type="text"
               placeholder="John Doe"
               className="pl-10"
-              value={formData.name}
-              onChange={handleChange}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              className="pl-10"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        {/* Verification Method Toggle */}
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={verificationMethod === "email" ? "default" : "outline"}
+            className="flex-1"
+            onClick={() => setVerificationMethod("email")}
+          >
+            <Mail className="mr-2 h-4 w-4" />
+            Email
+          </Button>
+          <Button
+            type="button"
+            variant={verificationMethod === "sms" ? "default" : "outline"}
+            className="flex-1"
+            onClick={() => setVerificationMethod("sms")}
+          >
+            <Smartphone className="mr-2 h-4 w-4" />
+            SMS
+          </Button>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
-          <div className="relative">
-            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="+1 (555) 123-4567"
-              className="pl-10"
-              value={formData.phone}
-              onChange={handleChange}
-            />
+        {/* Email Input */}
+        {verificationMethod === "email" && (
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                className="pl-10"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              className="pl-10 pr-10"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </Button>
+        {/* Phone Input */}
+        {verificationMethod === "sms" && (
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <div className="relative">
+              <Smartphone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+1 (234) 567-8900"
+                className="pl-10"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <Input
-            id="confirmPassword"
-            type={showPassword ? "text" : "password"}
-            placeholder="••••••••"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        )}
 
         <div className="flex items-start space-x-2">
           <Checkbox
@@ -136,44 +158,40 @@ export function Signup() {
             checked={agreeToTerms}
             onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
           />
-          <div className="flex flex-wrap items-center gap-1 text-xs">
-            <span className="text-muted-foreground">I agree to the</span>
-            <Link
-              to="/terms"
-              className="text-primary hover:underline font-medium"
+          <div className="grid gap-1.5 leading-none">
+            <Label
+              htmlFor="terms"
+              className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-wrap items-center gap-1"
             >
-              Terms of Service
-            </Link>
-            <span className="text-muted-foreground">and</span>
-            <Link
-              to="/privacy"
-              className="text-primary hover:underline font-medium"
-            >
-              Privacy Policy
-            </Link>
+              <span className="text-muted-foreground">I agree to the</span>
+              <Link
+                to="/terms"
+                className="text-primary hover:underline font-medium"
+              >
+                Terms of Service
+              </Link>
+              <span className="text-muted-foreground">and</span>
+              <Link
+                to="/privacy"
+                className="text-primary hover:underline font-medium"
+              >
+                Privacy Policy
+              </Link>
+            </Label>
           </div>
         </div>
 
         <Button type="submit" className="w-full" disabled={!agreeToTerms}>
           Create Account
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Or sign up with
-            </span>
-          </div>
-        </div>
-
-        <SocialButtons />
 
         <div className="text-center text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="text-primary hover:underline">
+          <Link
+            to="/login"
+            className="text-primary hover:underline font-medium"
+          >
             Sign in
           </Link>
         </div>
